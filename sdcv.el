@@ -131,6 +131,9 @@
 
 ;;; Change log:
 ;;
+;; 2026/09/30
+;;      * Add autoload cookies to interactive commands.
+;;
 ;; 2020/06/12
 ;;      * Add `sdcv-env-lang' option.
 ;;
@@ -265,9 +268,14 @@ finish system installation."
   :type 'boolean
   :group 'sdcv)
 
-(defcustom sdcv-tooltip-border-width 10
+(defcustom sdcv-tooltip-border-width 1
   "The border width of sdcv tooltip, in pixels."
   :type 'integer
+  :group 'sdcv)
+
+(defcustom sdcv-tooltip-border-color "red"
+  "The border color of sdcv tooltip."
+  :type 'color
   :group 'sdcv)
 
 (defcustom sdcv-say-word-p nil
@@ -390,6 +398,7 @@ And show information using tooltip."
   ;; Display simple translate result.
   (sdcv-search-simple (or word (sdcv-prompt-input))))
 
+;;;###autoload
 (defun sdcv-quit ()
   "Bury sdcv buffer and restore previous window configuration."
   (interactive)
@@ -400,6 +409,7 @@ And show information using tooltip."
         (bury-buffer (sdcv-get-buffer)))
     (bury-buffer)))
 
+;;;###autoload
 (defun sdcv-next-dictionary ()
   "Jump to next dictionary."
   (interactive)
@@ -410,6 +420,7 @@ And show information using tooltip."
         (recenter 0))
     (message "Reached last dictionary.")))
 
+;;;###autoload
 (defun sdcv-previous-dictionary ()
   "Jump to previous dictionary."
   (interactive)
@@ -420,16 +431,19 @@ And show information using tooltip."
         (recenter 0))                   ;adjust position
     (message "Reached first dictionary.")))
 
+;;;###autoload
 (defun sdcv-scroll-up-one-line ()
   "Scroll up one line."
   (interactive)
   (scroll-up 1))
 
+;;;###autoload
 (defun sdcv-scroll-down-one-line ()
   "Scroll down one line."
   (interactive)
   (scroll-down 1))
 
+;;;###autoload
 (defun sdcv-next-line (arg)
   "Go to next ARGth line and show item."
   (interactive "P")
@@ -440,12 +454,14 @@ And show information using tooltip."
       (when (looking-at outline-regexp)
         (outline-show-entry)))))
 
+;;;###autoload
 (defun sdcv-prev-line (arg)
   "Go to previous ARGth line."
   (interactive "P")
   (ignore-errors
     (call-interactively 'previous-line arg)))
 
+;;;###autoload
 (defun sdcv-check ()
   "Check for missing StarDict dictionaries."
   (interactive)
@@ -517,6 +533,7 @@ The result will be displayed in buffer named with
        :background-color (face-attribute 'sdcv-tooltip-face :background)
        :foreground-color (face-attribute 'sdcv-tooltip-face :foreground)
        :internal-border-width sdcv-tooltip-border-width
+      :internal-border-color sdcv-tooltip-border-color
        :tab-line-height 0
        :header-line-height 0)
       (unwind-protect
